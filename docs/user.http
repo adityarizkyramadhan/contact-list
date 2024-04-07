@@ -1,0 +1,11 @@
+@baseUrl=http://localhost:8080
+
+
+# 1. Create a new user
+POST {{baseUrl}}/user/register
+Content-Type: application/json
+
+{
+  "username": "user1",
+  "password": "password1"
+}
