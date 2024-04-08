@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/adityarizkyramadhan/contact-list/config/db"
+	"github.com/adityarizkyramadhan/contact-list/contact"
 	"github.com/adityarizkyramadhan/contact-list/middleware"
 	"github.com/adityarizkyramadhan/contact-list/user"
 	"github.com/gin-gonic/gin"
@@ -27,6 +28,9 @@ func main() {
 	user := user.New(db, app)
 	user.Init()
 	log.Info().Msg("success init user")
+	contact := contact.New(db, app)
+	contact.Init()
+	log.Info().Msg("success init contact")
 	if err := app.Run(":8080"); err != nil {
 		panic(fmt.Sprintf("failed to run server: %v", err.Error()))
 	}
