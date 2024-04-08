@@ -1,11 +1,39 @@
 @baseUrl=http://localhost:8080
 
 
-# 1. Create a new user
+### 1. Create a new user
 POST {{baseUrl}}/user/register
 Content-Type: application/json
 
 {
-  "username": "user1",
+  "username": "user1234",
   "password": "password1"
+}
+
+
+
+### 2. Login
+POST {{baseUrl}}/user/login
+Content-Type: application/json
+
+{
+  "username": "user1234",
+  "password": "password1"
+}
+
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM5OTlhNmE5LTQ4N2MtNGJjZS04ZTJmLTA2Njc3ODFjNmViMSJ9.meh8lbwSGPHRHeD6vtzIoaPxupoP-rDr-qUa84k5gGA
+### 3. Show Profile
+GET {{baseUrl}}/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+
+### 4. Update Profile
+PUT {{baseUrl}}/user/3999a6a9-487c-4bce-8e2f-0667781c6eb1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "password": "password2"
 }

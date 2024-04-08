@@ -13,12 +13,12 @@ type (
 	User struct {
 		ID          uuid.UUID      `json:"id" gorm:"type:varchar(36);primary_key;"`
 		Username    string         `json:"username" gorm:"type:varchar(255);not null; unique"`
-		Password    string         `json:"password" gorm:"type:varchar(255);not null"`
+		Password    string         `json:"-" gorm:"type:varchar(255);not null"`
 		CreatedAt   time.Time      `json:"createdAt" gorm:"autoCreateTime"`
 		UpdatedAt   time.Time      `json:"updatedAt" gorm:"autoUpdateTime"`
-		DeletedAt   gorm.DeletedAt `json:"deleted_at" gorm:"index"`
-		PhoneNumber []PhoneNumber  `json:"phone_number" gorm:"foreignKey:user_id;references:id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-		Contact     []Contact      `json:"contact" gorm:"foreignKey:user_id;references:id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+		DeletedAt   gorm.DeletedAt `json:"-" gorm:"index"`
+		PhoneNumber []PhoneNumber  `json:"-" gorm:"foreignKey:user_id;references:id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+		Contact     []Contact      `json:"-" gorm:"foreignKey:user_id;references:id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	}
 	UserRepository interface {
 		Store(ctx context.Context, user *User) error

@@ -36,7 +36,7 @@ func ValidateJWToken() gin.HandlerFunc {
 			return
 		}
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			userId := uint(claims["id"].(float64))
+			userId := claims["id"].(string)
 			c.Set("id", userId)
 			c.Next()
 		} else {

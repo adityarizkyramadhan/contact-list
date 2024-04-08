@@ -27,7 +27,7 @@ func (u *User) Init() {
 		userRoute.POST("/register", userHttp.Register)
 		userRoute.POST("/login", userHttp.Login)
 		userRoute.GET("/", middleware.ValidateJWToken(), userHttp.FindByID)
-		userRoute.PUT("/", middleware.ValidateJWToken(), userHttp.Update)
+		userRoute.PUT("/:id", middleware.ValidateJWToken(), userHttp.Update)
 		userRoute.DELETE("/", middleware.ValidateJWToken(), userHttp.Delete)
 	}
 }

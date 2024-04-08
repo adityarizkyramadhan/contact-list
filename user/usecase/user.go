@@ -88,6 +88,13 @@ func (u *user) Update(ctx context.Context, user *request.UserUpdate) error {
 		return fmt.Errorf("internal server error: %v", err.Error())
 	}
 	if user.Username != "" {
+		isExist, err := u.repoUser.FindByUsername(ctx, user.Username)
+		if err != nil && err.Error() != "record not found" {
+			return fmt.Errorf("internal server error: %v", err.Error())
+		}
+		if isExist != nil {
+			return fmt.Errorf("bad request: username already exist")
+		}
 		userDomain.Username = user.Username
 	}
 	if user.Password != "" {
