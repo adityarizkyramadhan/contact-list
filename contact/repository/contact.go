@@ -134,7 +134,7 @@ func (c *contact) FindAll(ctx context.Context, userID uuid.UUID, query request.C
 	if query.Limit == 0 {
 		query.Limit = 10
 	}
-	if err := tx.Where("user_id = ?", userID).Preload("PhoneNumbers").Find(&contacts).Count(&count).Error; err != nil {
+	if err := tx.Where("user_id = ?", userID).Limit(query.Limit).Offset((query.Page - 1) * query.Limit).Find(&contacts).Count(&count).Error; err != nil {
 		return nil, 0, fmt.Errorf("internal server error: %v", err.Error())
 	}
 	return contacts, count, nil

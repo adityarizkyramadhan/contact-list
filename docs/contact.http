@@ -1,6 +1,5 @@
 @baseUrl=http://localhost:8080
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM5OTlhNmE5LTQ4N2MtNGJjZS04ZTJmLTA2Njc3ODFjNmViMSJ9.meh8lbwSGPHRHeD6vtzIoaPxupoP-rDr-qUa84k5gGA
-
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgwZDBmMjAxLWE3NzUtNGRiOS1hZWVkLTQ2M2NkMGRlNDkzOCJ9.L-qZsKHrAT-IO7HNi0rIkfd2PS9ogdQd5QxPjTlbnEM
 
 ### Create a new contact
 POST {{baseUrl}}/contact
@@ -8,14 +7,14 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "first_name": "Jane",
+  "first_name": "John",
   "last_name": "Doe",
   "phone_numbers": [
     {
-      "number": "123-456-7890"
+      "number": "124-456-7890"
     },
     {
-      "number": "987-654-3210"
+      "number": "989-654-3210"
     }
   ]
 }
@@ -26,27 +25,27 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ### Get a contact by id
-GET {{baseUrl}}/contact/18694e65-3d73-4932-be0f-cda088b5baca
+GET {{baseUrl}}/contact/c3ccb1f2-e538-4b31-bdf2-53c38c6d0fd2
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ### Update a contact
-PUT {{baseUrl}}/contact/df5eadeb-dddc-4165-8298-30c5e5fb6c21
+PUT {{baseUrl}}/contact/c3ccb1f2-e538-4b31-bdf2-53c38c6d0fd2
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "first_name": "Jane",
+  "first_name": "Nana",
   "last_name": "Doe"
 }
 
 ### Delete a contact
-DELETE {{baseUrl}}/contact/df5eadeb-dddc-4165-8298-30c5e5fb6c21
+DELETE {{baseUrl}}/contact/c3ccb1f2-e538-4b31-bdf2-53c38c6d0fd2
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ### add a phone number to a contact
-POST {{baseUrl}}/contact/18694e65-3d73-4932-be0f-cda088b5baca/phone-number
+POST {{baseUrl}}/contact/c3ccb1f2-e538-4b31-bdf2-53c38c6d0fd2/phone-number
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
