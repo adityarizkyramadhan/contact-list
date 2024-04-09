@@ -1,6 +1,8 @@
 package db
 
 import (
+	"os"
+
 	"github.com/adityarizkyramadhan/contact-list/domain"
 	"github.com/rs/zerolog/log"
 	"gorm.io/driver/postgres"
@@ -8,7 +10,7 @@ import (
 )
 
 func InitGorm() (*gorm.DB, error) {
-	connection := "postgresql://postgres:mysecretpassword@localhost:5432/postgres?sslmode=disable"
+	connection := os.Getenv("DATABASE_URL")
 	db, err := gorm.Open(postgres.Open(connection))
 	if err != nil {
 		log.Error().Msgf("cant connect to database %s", err)

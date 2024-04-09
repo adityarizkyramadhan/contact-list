@@ -8,10 +8,15 @@ import (
 	"github.com/adityarizkyramadhan/contact-list/middleware"
 	"github.com/adityarizkyramadhan/contact-list/user"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"github.com/rs/zerolog/log"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		panic(fmt.Sprintf("failed to load env: %v", err.Error()))
+	}
 	db, err := db.InitGorm()
 	if err != nil {
 		panic(fmt.Sprintf("failed to connect to database: %v", err.Error()))
