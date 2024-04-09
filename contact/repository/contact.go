@@ -101,17 +101,21 @@ func (c *contact) Delete(ctx context.Context, userID, id uuid.UUID) error {
 	return tx.Commit().Error
 }
 
-func (c *contact) FindAll(ctx context.Context, userID uuid.UUID, query request.ContactQuery) ([]domain.Contact, error) {
+func (c *contact) FindAll(ctx context.Context, userID uuid.UUID, query request.ContactQuery) ([]domain.Contact, int64, error) {
 	var contacts []domain.Contact
-	tx := c.db.WithContext(ctx).Where("user_id = ?", userID)
+	var count int64
+	tx := c.db.WithContext(ctx)
 	if query.Name != "" {
 		tx = tx.Where("first_name LIKE ?", "%"+query.Name+"%")
 	}
-	if query.Page != 0 && query.Limit != 0 {
-		tx = tx.Offset((query.Page - 1) * query.Limit).Limit(query.Limit)
+	if query.Page == 0 {
+		query.Page = 1
 	}
-	if err := tx.Preload("PhoneNumbers").Find(&contacts).Error; err != nil {
-		return nil, fmt.Errorf("bad request: %v", err.Error())
+	if query.Limit == 0 {
+		query.Limit = 10
 	}
-	return contacts, nil
+	if err := tx.Where("user_id = ?", userID).Find(&contacts).Count(&count).Error; err != nil {
+		return nil, 0, fmt.Errorf("internal server error: %v", err.Error())
+	}
+	return contacts, count, nil
 }

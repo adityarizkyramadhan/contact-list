@@ -4,6 +4,7 @@ import (
 	delivery "github.com/adityarizkyramadhan/contact-list/contact/delivery/http"
 	"github.com/adityarizkyramadhan/contact-list/contact/repository"
 	"github.com/adityarizkyramadhan/contact-list/contact/usecase"
+	"github.com/adityarizkyramadhan/contact-list/middleware"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -23,9 +24,10 @@ func (c *Contact) Init() {
 	contactHttp := delivery.New(contactUc)
 	contactRoute := c.router.Group("/contact")
 	{
-		contactRoute.POST("/", contactHttp.Create)
-		contactRoute.GET("/:id", contactHttp.FindByID)
-		contactRoute.PUT("/:id", contactHttp.Update)
-		contactRoute.DELETE("/:id", contactHttp.Delete)
+		contactRoute.POST("/", middleware.ValidateJWToken(), contactHttp.Create)
+		contactRoute.GET("/:id", middleware.ValidateJWToken(), contactHttp.FindByID)
+		contactRoute.GET("/", middleware.ValidateJWToken(), contactHttp.FindAll)
+		contactRoute.PUT("/:id", middleware.ValidateJWToken(), contactHttp.Update)
+		contactRoute.DELETE("/:id", middleware.ValidateJWToken(), contactHttp.Delete)
 	}
 }

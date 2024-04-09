@@ -23,6 +23,10 @@ func (c *contract) Create(ctx *gin.Context) {
 		ctx.Error(err)
 		return
 	}
+	model.UserID = ctx.MustGet("id").(string)
+	if model.UserID == "" {
+		utils.ResponseFail(ctx, http.StatusBadRequest, "bad request: id is required", nil)
+	}
 	if err := c.usecaseContact.Create(ctx, &model); err != nil {
 		ctx.Error(err)
 		return
@@ -53,6 +57,14 @@ func (c *contract) Update(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(&model); err != nil {
 		ctx.Error(err)
 		return
+	}
+	model.UserID = ctx.MustGet("id").(string)
+	if model.UserID == "" {
+		utils.ResponseFail(ctx, http.StatusBadRequest, "bad request: id is required", nil)
+	}
+	model.ID = ctx.Param("id")
+	if model.ID == "" {
+		utils.ResponseFail(ctx, http.StatusBadRequest, "bad request: contact id is required", nil)
 	}
 	if err := c.usecaseContact.Update(ctx, &model); err != nil {
 		ctx.Error(err)

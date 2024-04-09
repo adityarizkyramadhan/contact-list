@@ -6,6 +6,7 @@ import (
 
 	"github.com/adityarizkyramadhan/contact-list/domain"
 	"github.com/adityarizkyramadhan/contact-list/request"
+	"github.com/adityarizkyramadhan/contact-list/response"
 	"github.com/google/uuid"
 )
 
@@ -62,16 +63,20 @@ func (c *contact) FindByID(ctx context.Context, userID, id string) (*domain.Cont
 	return contact, nil
 }
 
-func (c *contact) FindAll(ctx context.Context, userID string, query request.ContactQuery) ([]domain.Contact, error) {
+func (c *contact) FindAll(ctx context.Context, userID string, query request.ContactQuery) (*response.FindAll, error) {
 	userIDParse, err := uuid.Parse(userID)
 	if err != nil {
 		return nil, fmt.Errorf("bad request: %v", err.Error())
 	}
-	contacts, err := c.repoContact.FindAll(ctx, userIDParse, query)
+	contacts, count, err := c.repoContact.FindAll(ctx, userIDParse, query)
 	if err != nil {
 		return nil, err
 	}
-	return contacts, nil
+	response := &response.FindAll{
+		Data:       contacts,
+		Pagination: response.NewPagination(query.Page, query.Limit, int(count)),
+	}
+	return response, nil
 }
 
 func (c *contact) Update(ctx context.Context, model *request.ContactUpdate) error {
@@ -84,7 +89,7 @@ func (c *contact) Update(ctx context.Context, model *request.ContactUpdate) erro
 		return fmt.Errorf("bad request: %v", err.Error())
 	}
 	contact := &domain.Contact{
-		ID:        uuid.New(),
+		ID:        uuid.MustParse(model.ID),
 		FirstName: model.FirstName,
 		LastName:  model.LastName,
 		UserID:    userID,

@@ -1,0 +1,46 @@
+@baseUrl=http://localhost:8080
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM5OTlhNmE5LTQ4N2MtNGJjZS04ZTJmLTA2Njc3ODFjNmViMSJ9.meh8lbwSGPHRHeD6vtzIoaPxupoP-rDr-qUa84k5gGA
+
+
+### Create a new contact
+POST {{baseUrl}}/contact
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "first_name": "John",
+  "last_name": "Doe",
+  "phone_numbers": [
+    {
+      "number": "123-456-7890"
+    },
+    {
+      "number": "987-654-3210"
+    }
+  ]
+}
+
+### Get all contacts
+GET {{baseUrl}}/contact
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Get a contact by id
+GET {{baseUrl}}/contact/df5eadeb-dddc-4165-8298-30c5e5fb6c21
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Update a contact
+PUT {{baseUrl}}/contact/df5eadeb-dddc-4165-8298-30c5e5fb6c21
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "first_name": "Jane",
+  "last_name": "Doe"
+}
+
+### Delete a contact
+DELETE {{baseUrl}}/contact/df5eadeb-dddc-4165-8298-30c5e5fb6c21
+Content-Type: application/json
+Authorization: Bearer {{token}}
