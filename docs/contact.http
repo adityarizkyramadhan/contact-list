@@ -8,7 +8,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "first_name": "John",
+  "first_name": "Jane",
   "last_name": "Doe",
   "phone_numbers": [
     {
@@ -26,7 +26,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ### Get a contact by id
-GET {{baseUrl}}/contact/df5eadeb-dddc-4165-8298-30c5e5fb6c21
+GET {{baseUrl}}/contact/18694e65-3d73-4932-be0f-cda088b5baca
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -44,3 +44,13 @@ Authorization: Bearer {{token}}
 DELETE {{baseUrl}}/contact/df5eadeb-dddc-4165-8298-30c5e5fb6c21
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+### add a phone number to a contact
+POST {{baseUrl}}/contact/18694e65-3d73-4932-be0f-cda088b5baca/phone-number
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "number": "121-212-1212"
+}
+

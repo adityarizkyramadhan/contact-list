@@ -25,6 +25,7 @@ func (c *Contact) Init() {
 	contactRoute := c.router.Group("/contact")
 	{
 		contactRoute.POST("/", middleware.ValidateJWToken(), contactHttp.Create)
+		contactRoute.POST("/:id/phone-number", middleware.ValidateJWToken(), contactHttp.CreatePhoneNumber)
 		contactRoute.GET("/:id", middleware.ValidateJWToken(), contactHttp.FindByID)
 		contactRoute.GET("/", middleware.ValidateJWToken(), contactHttp.FindAll)
 		contactRoute.PUT("/:id", middleware.ValidateJWToken(), contactHttp.Update)

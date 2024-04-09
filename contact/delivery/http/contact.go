@@ -108,3 +108,25 @@ func (c *contract) FindAll(ctx *gin.Context) {
 	}
 	utils.ResponseSuccess(ctx, http.StatusOK, "success get all contact", contacts)
 }
+
+func (c *contract) CreatePhoneNumber(ctx *gin.Context) {
+	var model request.PhoneNumberOnlyCreate
+	if err := ctx.ShouldBindJSON(&model); err != nil {
+		ctx.Error(err)
+		return
+	}
+	model.UserID = ctx.MustGet("id").(string)
+	if model.UserID == "" {
+		utils.ResponseFail(ctx, http.StatusBadRequest, "bad request: id is required", nil)
+	}
+	idContact := ctx.Param("id")
+	if idContact == "" {
+		utils.ResponseFail(ctx, http.StatusBadRequest, "bad request: contact id is required", nil)
+	}
+	model.ContactID = idContact
+	if err := c.usecaseContact.CreatePhoneNumber(ctx, &model); err != nil {
+		ctx.Error(err)
+		return
+	}
+	utils.ResponseSuccess(ctx, http.StatusCreated, "success create phone number", nil)
+}

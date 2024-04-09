@@ -21,10 +21,11 @@ type (
 	}
 
 	ContactUpdate struct {
-		ID        string `json:"-"`
-		UserID    string `json:"-"`
-		FirstName string `json:"first_name"`
-		LastName  string `json:"last_name"`
+		ID                 string              `json:"-"`
+		UserID             string              `json:"-"`
+		FirstName          string              `json:"first_name"`
+		LastName           string              `json:"last_name"`
+		PhoneNumberUpdates []PhoneNumberUpdate `json:"phone_numbers"`
 	}
 )
 

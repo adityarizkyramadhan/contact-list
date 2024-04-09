@@ -23,11 +23,12 @@ type (
 	}
 	ContactRepository interface {
 		Delete(ctx context.Context, userID, id uuid.UUID) error
-		Update(ctx context.Context, model *Contact) error
+		Update(ctx context.Context, model *Contact, phones []*PhoneNumber) error
 		FindAll(ctx context.Context, userID uuid.UUID, query request.ContactQuery) ([]Contact, int64, error)
 		FindByID(ctx context.Context, userID, id uuid.UUID) (*Contact, error)
 		CreateWithPhoneNumbers(ctx context.Context, model *Contact, phoneNumbers []*PhoneNumber) error
 		Create(model *Contact) error
+		CreatePhoneNumber(ctx context.Context, model *PhoneNumber) error
 	}
 
 	ContactUsecase interface {
@@ -36,5 +37,6 @@ type (
 		FindAll(ctx context.Context, userID string, query request.ContactQuery) (*response.FindAll, error)
 		Update(ctx context.Context, model *request.ContactUpdate) error
 		Delete(ctx context.Context, userID, id string) error
+		CreatePhoneNumber(ctx context.Context, model *request.PhoneNumberOnlyCreate) error
 	}
 )

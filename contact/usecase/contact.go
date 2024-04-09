@@ -94,8 +94,18 @@ func (c *contact) Update(ctx context.Context, model *request.ContactUpdate) erro
 		LastName:  model.LastName,
 		UserID:    userID,
 	}
+	// masukkan data phone number ke dalam domain.PhoneNumber
+	var phoneNumbers []*domain.PhoneNumber
+	for _, phoneNumber := range model.PhoneNumberUpdates {
+		phoneNumbers = append(phoneNumbers, &domain.PhoneNumber{
+			ID:        uuid.MustParse(phoneNumber.ID),
+			ContactID: contact.ID,
+			Number:    phoneNumber.Number,
+			UserID:    userID,
+		})
+	}
 	// simpan data contact ke dalam database
-	if err := c.repoContact.Update(ctx, contact); err != nil {
+	if err := c.repoContact.Update(ctx, contact, phoneNumbers); err != nil {
 		return err
 	}
 	return nil
@@ -111,6 +121,25 @@ func (c *contact) Delete(ctx context.Context, userID, id string) error {
 		return fmt.Errorf("bad request: %v", err.Error())
 	}
 	if err := c.repoContact.Delete(ctx, userIDParse, contactID); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *contact) CreatePhoneNumber(ctx context.Context, model *request.PhoneNumberOnlyCreate) error {
+	// masukkan data phone number ke dalam domain.PhoneNumber
+	userID, err := uuid.Parse(model.UserID)
+	if err != nil {
+		return fmt.Errorf("bad request: %v", err.Error())
+	}
+	phoneNumber := &domain.PhoneNumber{
+		ID:        uuid.New(),
+		ContactID: uuid.MustParse(model.ContactID),
+		Number:    model.Number,
+		UserID:    userID,
+	}
+	// simpan data phone number ke dalam database
+	if err := c.repoContact.CreatePhoneNumber(ctx, phoneNumber); err != nil {
 		return err
 	}
 	return nil

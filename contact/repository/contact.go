@@ -47,7 +47,7 @@ func (c *contact) FindByID(ctx context.Context, userID, id uuid.UUID) (*domain.C
 	return &contact, nil
 }
 
-func (c *contact) Update(ctx context.Context, model *domain.Contact) error {
+func (c *contact) Update(ctx context.Context, model *domain.Contact, phones []*domain.PhoneNumber) error {
 	// cari dulu id contact yang akan diupdate
 	tx := utils.BeginTransaction(c.db).WithContext(ctx)
 	rollback := true
@@ -70,6 +70,26 @@ func (c *contact) Update(ctx context.Context, model *domain.Contact) error {
 	// update contact
 	if err := tx.Save(&contact).Error; err != nil {
 		return fmt.Errorf("internal server error: %v", err.Error())
+	}
+
+	if len(phones) > 0 {
+		// Cek dulu phone number yang akan diupdate
+		var ids []uuid.UUID
+		for _, phone := range phones {
+			ids = append(ids, phone.ID)
+		}
+		var phoneNumbers []domain.PhoneNumber
+		if err := tx.Where("id IN (?)", ids).Find(&phoneNumbers).Error; err != nil {
+			return fmt.Errorf("internal server error: %v", err.Error())
+		}
+		// cek apakah semua phone number ada
+		if len(phoneNumbers) != len(phones) {
+			return fmt.Errorf("bad request: phone number not found")
+		}
+		// update bulk phone number tanpa for loop
+		if err := tx.Model(&domain.PhoneNumber{}).Where("id IN (?)", ids).Updates(map[string]interface{}{"number": phones}).Error; err != nil {
+			return fmt.Errorf("internal server error: %v", err.Error())
+		}
 	}
 
 	rollback = false
@@ -114,8 +134,12 @@ func (c *contact) FindAll(ctx context.Context, userID uuid.UUID, query request.C
 	if query.Limit == 0 {
 		query.Limit = 10
 	}
-	if err := tx.Where("user_id = ?", userID).Find(&contacts).Count(&count).Error; err != nil {
+	if err := tx.Where("user_id = ?", userID).Preload("PhoneNumbers").Find(&contacts).Count(&count).Error; err != nil {
 		return nil, 0, fmt.Errorf("internal server error: %v", err.Error())
 	}
 	return contacts, count, nil
+}
+
+func (c *contact) CreatePhoneNumber(ctx context.Context, model *domain.PhoneNumber) error {
+	return c.db.WithContext(ctx).Create(model).Error
 }
